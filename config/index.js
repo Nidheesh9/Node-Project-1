@@ -9,6 +9,7 @@ const config = {
     dialect: "mysql",
   },
   saltRounds: parseInt(process.env.ROUNDS) || 10,
+  nodeEnv: process.env.NODE_ENV,
 };
 
 export default config;

@@ -5,6 +5,9 @@ import sequelize from "./config/database.js";
 import router from "./routes/index.js";
 import "./models/index.js";
 import config from "./config/index.js";
+import errorHandleMiddleware from "./middlewares/errorHandleMiddleware.js";
+import logger from "./config/logger.js";
+import morgan from "morgan";
 
 const app = express();
 
@@ -24,14 +27,23 @@ app.get("/", (_, res) => {
 // DB connection
 sequelize
   .authenticate()
-  .then(() => console.log("DB connected"))
-  .catch((err) => console.error("DB error:", err));
+  .then(() => logger.info("DB connected"))
+  .catch((err) => logger.error("DB error:", err));
 
 // create tables (DEV ONLY)
 await sequelize.sync();
 
+app.use(
+  morgan("combined", {
+    stream: {
+      write: (message) => logger.info(message.trim()),
+    },
+  }),
+);
+
 app.use("/api", router);
+app.use(errorHandleMiddleware);
 
 app.listen(config.port, () => {
-  console.log(`Server is running on port ${config.port}.`);
+  logger.info(`Server is running on port ${config.port}.`);
 });

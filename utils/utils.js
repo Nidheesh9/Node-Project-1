@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import config from "../config/index.js";
+import logger from "../config/logger.js";
 
 // Hash password using bcrypt
 async function hashPassword(password) {
@@ -25,7 +26,7 @@ function scheduleTaskReminder(task) {
   if (reminderTime <= 0) return;
 
   setTimeout(() => {
-    console.log(`Reminder: Task "${task.title}" is due at ${task.dueDate}`);
+    logger.info(`Reminder: Task "${task.title}" is due at ${task.dueDate}`);
   }, reminderTime);
 }
 
