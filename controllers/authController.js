@@ -1,6 +1,6 @@
 import { User } from "../models/index.js";
 import catchAsync from "../utils/catchAsync.js";
-import CustomError from "../utils/CustomError.js";
+import CustomError from "../utils/customError.js";
 import {
   comparePassword,
   generateToken,
