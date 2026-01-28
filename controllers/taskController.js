@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { Task } from "../models/index.js";
 
 // Create a new task
@@ -45,8 +46,46 @@ async function getAllTask(req, res) {
   try {
     const userId = req.user.id;
 
+    const {
+      priority,
+      status,
+      startDate,
+      endDate,
+      sortBy = "dueDate",
+      order = "asc",
+    } = req.query;
+
+    // WHERE conditions
+    const where = { userId };
+
+    if (priority) {
+      where.priority = priority; // low | medium | high
+    }
+
+    if (status) {
+      where.status = status; // pending | completed
+    }
+
+    if (startDate && endDate) {
+      where.dueDate = {
+        [Op.between]: [startDate, endDate],
+      };
+    }
+
+    // SORTING
+    let orderBy = [];
+
+    if (sortBy === "priority") {
+      // custom priority order
+      orderBy = [["priority", order.toLowerCase() === "desc" ? "DESC" : "ASC"]];
+    } else {
+      // dueDate sorting
+      orderBy = [[sortBy, order.toUpperCase()]];
+    }
+
     const tasks = await Task.findAll({
-      where: { userId },
+      where,
+      order: orderBy,
     });
 
     return res.status(200).json({
