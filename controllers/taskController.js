@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import { Task } from "../models/index.js";
+import { scheduleTaskReminder } from "../utils/utils.js";
 
 // Create a new task
 async function createTask(req, res) {
@@ -29,6 +30,8 @@ async function createTask(req, res) {
       userId,
     });
 
+    scheduleTaskReminder(task);
+
     return res.status(201).json({
       message: "Task created successfully",
       task,
@@ -53,8 +56,11 @@ async function getAllTask(req, res) {
       endDate,
       sortBy = "dueDate",
       order = "asc",
+      page = 1,
+      limit = 10,
     } = req.query;
 
+    const offset = (Number(page) - 1) * Number(limit);
     // WHERE conditions
     const where = { userId };
 
@@ -86,6 +92,8 @@ async function getAllTask(req, res) {
     const tasks = await Task.findAll({
       where,
       order: orderBy,
+      limit: Number(limit),
+      offset: Number(offset),
     });
 
     return res.status(200).json({

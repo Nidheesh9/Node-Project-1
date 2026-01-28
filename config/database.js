@@ -1,12 +1,13 @@
 import { Sequelize } from "sequelize";
+import config from "./index.js";
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
+  config.db.name,
+  config.db.username,
+  config.db.password,
   {
-    host: "localhost",
-    dialect: "mysql",
+    host: config.db.host,
+    dialect: config.db.dialect,
   },
 );
 

@@ -1,9 +1,10 @@
 import "dotenv/config";
-import express, { json, urlencoded } from "express";
+import express from "express";
 import cors from "cors";
 import sequelize from "./config/database.js";
-import router from "./routes/routes.js";
+import router from "./routes/index.js";
 import "./models/index.js";
+import config from "./config/index.js";
 
 const app = express();
 
@@ -13,8 +14,8 @@ app.use(
   }),
 );
 
-app.use(json());
-app.use(urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (_, res) => {
   res.json({ message: "Welcome to my application." });
@@ -31,7 +32,12 @@ await sequelize.sync();
 
 app.use("/api", router);
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+app.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}.`);
 });
+
+//winston
+//morgan
+//symmetric or assymetric encryption for JWT
+//1xx 2xx 3xx 4xx 5xx
+//soft delete

@@ -1,6 +1,9 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { User } from "../models/index.js";
+import {
+  comparePassword,
+  generateToken,
+  hashPassword,
+} from "../utils/utils.js";
 
 // Register a new user
 async function registerUser(req, res) {
@@ -22,7 +25,7 @@ async function registerUser(req, res) {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await hashPassword(password);
 
     const user = await User.create({
       username,
@@ -31,11 +34,7 @@ async function registerUser(req, res) {
     });
 
     // Generate JWT
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" },
-    );
+    const token = generateToken({ id: user.id, email: user.email });
 
     return res.status(201).json({
       message: "User created successfully",
@@ -73,7 +72,7 @@ async function loginUser(req, res) {
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await comparePassword(password, user.password);
 
     if (!isMatch) {
       return res.status(401).json({
@@ -82,11 +81,7 @@ async function loginUser(req, res) {
     }
 
     // Generate JWT
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" },
-    );
+    const token = generateToken({ id: user.id, email: user.email });
 
     return res.status(200).json({
       message: "Login successful",
