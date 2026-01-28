@@ -21,6 +21,7 @@ A RESTful Task Management API with **JWT authentication**, **task CRUD**, **filt
 ```
 ├── config/
 │   ├── database.js
+│   ├── logger.js
 |   └── index.js
 ├── controllers/
 │   ├── authController.js
