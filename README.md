@@ -221,6 +221,5 @@ Handled cases:
 - Centralized error handling
 - Modular folder structure
 - Sequelize migrations for DB consistency
-- UTC date storage (timezone safe)
 
 ---
