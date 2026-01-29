@@ -34,7 +34,7 @@ function scheduleTaskReminder(task) {
 function verifyToken(token) {
   try {
     return jwt.verify(token, config.jwtSecret);
-  } catch (err) {
+  } catch {
     return null;
   }
 }
